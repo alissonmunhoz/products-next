@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📦 Products Next
 
-## Getting Started
+Aplicação Next.js + TailwindCSS + TypeScript para gerenciamento de produtos.
+Frontend integrado a um backend em Go (ou qualquer API REST compatível), permitindo CRUD completo (criar, listar, editar e excluir produtos).
 
-First, run the development server:
+🚀 Tecnologias
 
-```bash
+Next.js 14
+– React com suporte a Server/Client Components
+
+TypeScript
+– Tipagem estática
+
+Tailwind CSS
+– Estilização utilitária
+
+Axios
+– Cliente HTTP para integração com backend
+
+ShadCN UI
+– Componentes de UI modernos
+
+Lucide Icons
+– Ícones leves e flexíveis
+
+📂 Estrutura do projeto
+products-next/
+├── public/ # Arquivos públicos
+├── src/
+│ ├── app/ # Rotas e páginas (Next.js App Router)
+│ ├── components/ # Componentes reutilizáveis (UI, tabelas, modais)
+│ ├── hooks/ # Hooks customizados (ex: useProducts)
+│ ├── lib/ # Funções auxiliares (ex: formatCurrency)
+│ ├── types/ # Tipagens globais (Product, etc.)
+│ └── styles/ # Estilos globais
+├── .env.local # Variáveis de ambiente
+├── next.config.ts # Configuração do Next.js
+├── tailwind.config.ts # Configuração do TailwindCSS
+├── tsconfig.json # Configuração do TypeScript
+├── package.json # Dependências e scripts
+└── README.md # Documentação
+
+⚙️ Configuração e execução
+
+Clone o repositório
+
+git clone https://github.com/alissonmunhoz/products-next.git
+cd products-next
+
+Instale as dependências
+
+npm install
+
+# ou
+
+yarn
+
+# ou
+
+pnpm install
+
+Configure as variáveis de ambiente
+Crie um arquivo .env.local na raiz do projeto com:
+
+NEXT_PUBLIC_API_URL=http://localhost:8080/v1
+
+Ajuste a URL da API conforme seu backend (Go, NestJS, etc.).
+
+Execute em modo desenvolvimento
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse em: 👉 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Build para produção
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+npm run build
+npm start
 
-## Learn More
+🛠 Funcionalidades
 
-To learn more about Next.js, take a look at the following resources:
+✅ Listagem de produtos em tabela com paginação
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+✅ Criação de produto via modal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+✅ Edição de produto
 
-## Deploy on Vercel
+✅ Exclusão simples e em massa
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+✅ Status de estoque (sem estoque, baixo, disponível)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+✅ Formatação de preços em BRL
+
+📡 Exemplo de integração com backend
+
+O frontend espera uma API com endpoints REST no formato:
+
+Criar produto
+POST /v1/product
+Content-Type: application/json
+
+{
+"name": "Notebook Dell",
+"price": 4500.00,
+"quantity": 5,
+"description": "Notebook para uso profissional"
+}
+
+Listar produtos
+GET /v1/products
+
+Atualizar produto
+PUT /v1/product?id=1
+Content-Type: application/json
+
+{
+"name": "Notebook Dell i7",
+"price": 4999.90,
+"quantity": 3
+}
+
+Deletar produto
+DELETE /v1/product?id=1
