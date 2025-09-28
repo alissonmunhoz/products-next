@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-
+import { useMemo, useState, useDeferredValue } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Plus, Package, TrendingUp, AlertTriangle, CheckCircle } from "lucide-react"
@@ -11,12 +10,22 @@ import type { CreateProductData, Product, UpdateProductData } from "@/types/prod
 import { ProductsTable } from "./products-table"
 import { ProductDialog } from "./product-dialog"
 import { useProducts } from "@/hooks/use-products"
+import { SearchBar } from "./search"
+
+function normalize(text: string) {
+  return (text ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+}
 
 export function ProductsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const { products, loading, createProduct, updateProduct, deleteProduct} =
-    useProducts()
+  const [searchValue, setSearchValue] = useState("")
+  const deferredSearch = useDeferredValue(searchValue)
+
+  const { products, loading, createProduct, updateProduct, deleteProduct } = useProducts()
 
   const handleCreateProduct = () => {
     setEditingProduct(null)
@@ -33,12 +42,37 @@ export function ProductsPage() {
     setEditingProduct(null)
   }
 
+
   const totalProducts = products.length
   const lowStockProducts = products.filter((p) => p.quantity < 10 && p.quantity > 0).length
   const outOfStockProducts = products.filter((p) => p.quantity === 0).length
   const totalValue = products.reduce((sum, p) => sum + p.price * p.quantity, 0)
 
+
+  const filteredProducts = useMemo(() => {
+    const query = normalize(deferredSearch).trim()
+    if (!query) return products
+
+    const tokens = query.split(/\s+/).filter(Boolean)
+
+    return products.filter((p) => {
+      const haystack = normalize(
+        [
+          p.name,
+          p.description,
+          String(p.id ?? ""),
+          String(p.price ?? ""),
+          String(p.quantity ?? ""),
+        ].join(" ")
+      )
+
+
+      return tokens.every((t) => haystack.includes(t))
+    })
+  }, [products, deferredSearch])
+
   return (
+  
     <div className="min-h-screen bg-background grid-pattern">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-blue-500/10" />
@@ -115,36 +149,35 @@ export function ProductsPage() {
 
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-semibold">Catálogo</h2>
-              <p className="text-muted-foreground mt-1">Gerencie todos os seus produtos</p>
-            </div>
-           
+             <div>
+            <h2 className="text-3xl font-semibold">Catálogo</h2>
+            <p className="text-muted-foreground mt-1">Gerencie todos os seus produtos</p>
           </div>
+          <SearchBar value={searchValue} onChange={setSearchValue} placeholder="Buscar produtos..." />
+        </div>
 
-          <div className="glass rounded-2xl overflow-hidden">
-            <ProductsTable
-              products={products}
-              loading={loading}
-              onEdit={handleEditProduct}
-              onDelete={deleteProduct}
-            />
-          </div>
+    
+        <div className="glass rounded-2xl overflow-hidden">
+          <ProductsTable
+            products={filteredProducts}
+            loading={loading}
+            onEdit={handleEditProduct}
+            onDelete={deleteProduct}
+          />
         </div>
       </div>
 
-
-      <ProductDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        product={editingProduct}
-        onSave={(data) => {
-          return editingProduct
+        <ProductDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          product={editingProduct}
+          onSave={(data) => editingProduct
             ? updateProduct(data as UpdateProductData)
-            : createProduct(data as CreateProductData)
-        }}
-        onClose={handleCloseDialog}
-      />
+            : createProduct(data as CreateProductData)}
+          onClose={handleCloseDialog}
+        />
+      </div>
     </div>
-  )
-}
+  
+        )
+      }

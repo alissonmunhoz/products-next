@@ -129,4 +129,4 @@ DELETE /v1/product?id=1
 
 ## Screenshots
 
-![App Screenshot](https://i.imgur.com/kkvLjvG.png)
+![App Screenshot](https://i.imgur.com/uGhJcAj.png)
