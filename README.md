@@ -127,26 +127,6 @@ Content-Type: application/json
 DELETE /v1/product?id=1
 ```
 
----
+## Screenshots
 
-## 📦 Deploy
-
-- **Vercel**: basta conectar este repositório, a plataforma detecta Next.js automaticamente.
-- **Docker**: caso queira, pode criar um `Dockerfile` para rodar o frontend junto ao backend.
-
----
-
-## 🤝 Contribuindo
-
-1. Faça um fork do projeto
-2. Crie uma branch (`git checkout -b feature/minha-feature`)
-3. Commit suas alterações (`git commit -m 'feat: minha nova feature'`)
-4. Push (`git push origin feature/minha-feature`)
-5. Abra um Pull Request 🚀
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença **MIT**.  
-Sinta-se livre para usar e modificar.
+![App Screenshot](https://i.imgur.com/kkvLjvG.png)
